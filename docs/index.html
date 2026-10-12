@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A reproducible study of time-aware content refresh opportunity scoring on anonymized search performance data.">
+<title>How Can We Rank Content Refresh Opportunities Before Traffic Declines?</title>
+<style>
+:root{--ink:#18212b;--muted:#596776;--paper:#fbfaf7;--card:#fff;--line:#e4e2dc;--accent:#175e59;--accent2:#dbece7;--warm:#fff2da;--warmline:#e9c986;--measure:#eff2f6;--max:1120px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.shell{max-width:var(--max);margin:0 auto;padding:0 28px}
+.topbar{border-bottom:1px solid var(--line);background:#ffffffb8}.topbar .shell{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:17px;padding-bottom:17px}.brand{font-size:.8rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}.topmeta{color:var(--muted);font-size:.82rem}
+.hero{padding:68px 0 42px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 80% 5%,#dfece6 0,transparent 36%),var(--paper)}
+.kicker{font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-size:.76rem}
+h1{font-size:clamp(2.4rem,5vw,4.8rem);letter-spacing:-.055em;line-height:1.03;max-width:900px;margin:18px 0 22px;font-weight:750}
+.dek{font-size:1.2rem;color:#394956;max-width:760px;margin:0 0 28px}
+.meta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:32px}
+.meta{background:#ffffffbd;border:1px solid var(--line);padding:14px 16px;border-radius:14px}.meta span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:750}.meta strong{display:block;font-size:.96rem;margin-top:4px}
+.status{background:var(--warm);border:1px solid var(--warmline);border-radius:14px;padding:16px 18px;margin-top:25px;color:#594315}.status strong{display:block;margin-bottom:2px}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:52px;padding-top:46px;padding-bottom:90px}
+.toc{position:sticky;top:22px;align-self:start;border-right:1px solid var(--line);padding-right:22px}.toc strong{display:block;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}.toc a{display:block;text-decoration:none;color:var(--muted);font-size:.88rem;padding:5px 0}.toc a:hover{color:var(--accent)}
+article{min-width:0}section{padding:0 0 42px;margin:0 0 40px;border-bottom:1px solid var(--line);scroll-margin-top:24px}section:last-child{border:0}
+.section-label{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:var(--accent)}
+h2{font-size:clamp(1.65rem,3vw,2.35rem);letter-spacing:-.035em;line-height:1.16;margin:8px 0 20px}
+h3{font-size:1.12rem;letter-spacing:-.015em;margin:26px 0 8px}
+p{margin:0 0 15px}.lead{font-size:1.12rem;color:#334653}
+.abstract{border-left:4px solid var(--accent);padding:4px 0 4px 22px;margin-top:18px}.abstract p{font-size:1.01rem}
+.callout{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:20px 22px;margin:22px 0}
+.callout p:last-child{margin-bottom:0}.callout.warn{background:var(--warm);border-color:var(--warmline)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}.stat{border:1px solid var(--line);border-radius:15px;background:var(--card);padding:18px}.stat .value{font-size:2rem;font-weight:800;letter-spacing:-.04em;line-height:1.1}.stat .label{font-size:.8rem;color:var(--muted);margin-top:8px}
+figure{margin:20px 0 28px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;overflow:hidden}figure img{display:block;max-width:100%;height:auto;margin:auto}figcaption{font-size:.83rem;color:var(--muted);margin:12px 4px 0}
+.table-wrap{overflow-x:auto;margin:18px 0}table{border-collapse:collapse;width:100%;font-size:.89rem;background:var(--card)}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}thead th{background:var(--measure);font-size:.77rem;text-transform:uppercase;letter-spacing:.04em}
+ul,ol{padding-left:22px}li{padding-left:4px;margin:0 0 10px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:.74rem;color:var(--muted);margin:3px 5px 3px 0}
+.timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}.phase{border:1px solid var(--line);background:var(--card);border-radius:15px;padding:17px}.phase .date{font-size:.75rem;color:var(--accent);font-weight:850;text-transform:uppercase;letter-spacing:.09em}.phase strong{display:block;margin:5px 0}.phase p{font-size:.85rem;color:var(--muted);margin:0}
+footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:.85rem}footer .shell{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:800px){.layout{grid-template-columns:1fr;gap:28px}.toc{position:static;border-right:0;border-bottom:1px solid var(--line);padding:0 0 18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.toc strong{grid-column:1/-1}.meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-grid{grid-template-columns:1fr}.timeline{grid-template-columns:1fr}.hero{padding-top:46px}.shell{padding-left:20px;padding-right:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="shell"><div class="brand">Search Intelligence · Research</div><div class="topmeta">FlyRank ML Internship · Capstone</div></div></header>
+<div class="hero"><div class="shell">
+  <div class="kicker">Refresh / Content Opportunity Scoring</div>
+  <h1>How can we rank content refresh opportunities before traffic declines?</h1>
+  <p class="dek">A time-aware ranking experiment that weighs search visibility and recent momentum, compares learned models with a transparent baseline, and turns the result into an editorial review playbook.</p>
+  <div class="meta-grid">
+    <div class="meta"><span>Study type</span><strong>Applied ML · Ranking</strong></div>
+    <div class="meta"><span>Data</span><strong>FlyRank warehouse</strong></div>
+    <div class="meta"><span>Outcome horizon</span><strong>Next calendar month</strong></div>
+    <div class="meta"><span>Decision</span><strong>What to review first</strong></div>
+  </div>
+  <div class="status"><strong>Draft — final warehouse evaluation still needs to be run</strong>The committed capstone notebook now defines a leakage-aware, month-aligned evaluation. Its generated metrics and charts must be reviewed and committed before this page is treated as the final submission. Earlier starter-snapshot metrics below are shown only as exploratory audit context.</div>
+</div></div>
+
+<div class="shell layout">
+<nav class="toc" aria-label="Table of contents"><strong>On this page</strong>
+<a href="#abstract">Title + Abstract</a><a href="#problem">Introduction / Problem</a><a href="#data">Data</a><a href="#method">Methodology</a><a href="#results">Results</a><a href="#limitations">Limitations</a><a href="#recommendations">Ranked recommendations</a><a href="#reproducibility">Reproducibility</a><a href="#credit">Acknowledgments & data credit</a>
+</nav>
+
+<main><article>
+<section id="abstract"><div class="section-label">01 · Summary</div><h2>Title + Abstract</h2>
+<div class="abstract">
+<p>This study asks whether monthly search-performance signals can help rank content items likely to see a meaningful decline in the following month. It aggregates the gated FlyRank internship warehouse at client-content-month grain and defines the target as next-month impressions at least 20% below the feature month, with a minimum of 100 impressions and valid Google Search Console coverage. It compares a transparent visibility-plus-momentum baseline with Logistic Regression and Random Forest, using February–April 2026 for model selection and May features → June outcome as the final holdout. An earlier 30,000-row starter-snapshot run reported Precision@50 of 0.740 for Random Forest versus 0.240 for the rule baseline, but those figures are not treated as the primary capstone result because the old feature windows overlap the trend-label window. The intended output is a ranked editorial review queue for human decision support, not a prediction of Google's algorithm or a causal claim that refreshing content improves traffic.</p>
+</div>
+<div class="stat-grid">
+<div class="stat"><div class="value">20%</div><div class="label">Defined next-month impression decline threshold</div></div>
+<div class="stat"><div class="value">3 months</div><div class="label">Previous, feature, and outcome months must have valid GSC coverage</div></div>
+<div class="stat"><div class="value">Human-led</div><div class="label">Scores prioritize review; they do not publish changes</div></div>
+</div>
+</section>
+
+<section id="problem"><div class="section-label">02 · Why this matters</div><h2>Introduction / Problem statement</h2>
+<p class="lead">Editorial teams face a prioritization problem: there are more pages to inspect than time available, and the oldest page is not always the page that needs attention first.</p>
+<p>A simple recency or volume rule is easy to understand but may ignore several signals at once. This capstone asks whether a compact supervised model can rank content items with an elevated chance of a substantial next-month impression decline better than a readable visibility-plus-momentum baseline.</p>
+<p>The unit of analysis is a pseudonymized content item for a given feature month. The output is a score and rank, with a human editor deciding whether to inspect the page. A false positive consumes review time; a false negative may leave a deteriorating page unchecked. The study evaluates the quality of the ranked review list, not the impact of making an edit.</p>
+</section>
+
+<section id="data"><div class="section-label">03 · Evidence base</div><h2>Data</h2>
+<h3>Source, grain, and time windows</h3>
+<p>The primary analysis uses the gated <strong>FlyRank/internship-warehouse</strong> release, specifically the daily fact table for search performance. Daily records are aggregated to one row per pseudonymized client, content item, and calendar month. The notebook scans the May 2025 through June 2026 monthly partitions, then creates examples with feature months June 2025 through May 2026.</p>
+<div class="timeline">
+<div class="phase"><div class="date">Feature construction</div><strong>Previous + current month</strong><p>Impressions, clicks, average position, active days, CTR, and month-to-month change.</p></div>
+<div class="phase"><div class="date">Model selection</div><strong>February–April 2026</strong><p>Choose a model without inspecting the final holdout outcome.</p></div>
+<div class="phase"><div class="date">Final evaluation</div><strong>May → June 2026</strong><p>May features rank pages against the June decline proxy.</p></div>
+</div>
+<h3>Eligibility and exclusions</h3>
+<p>Only daily rows with GSC availability explicitly marked true are included. A candidate needs valid GSC records in the previous, feature, and outcome months and at least 100 impressions in the feature month. Records with false or null coverage flags are not treated as zero performance.</p>
+<p>The model excludes the outcome month's impressions, trend-direction fields, pseudonymous IDs, raw queries, URLs, page titles, client names, domains, and credentials. IDs are only used for joins. The query-level table, GA4 fields, and AI-referral metrics are excluded from the primary model because they are not needed for this target and coverage can be sparse.</p>
+<div class="callout"><strong>Coverage caveat</strong><p>Requiring three adjacent observed months creates a persistent-observation cohort. New, removed, or intermittently tracked pages may be underrepresented, so the findings should not be generalized to every page in the warehouse.</p></div>
+</section>
+
+<section id="method"><div class="section-label">04 · How it is tested</div><h2>Methodology</h2>
+<h3>Target and feature timing</h3>
+<p>The outcome proxy is positive when next-month impressions are at most 80% of current-month impressions. Every predictor is built from previous or current full-month data available at the feature cutoff. CTR and momentum are derived only from those historical windows; future-month totals are used only to create the label and are excluded from predictors.</p>
+<h3>Baseline and candidate models</h3>
+<p>The transparent baseline combines two percentile ranks: 50% current-month visibility, measured as log impressions, and 50% recent momentum risk, where more negative month-over-month impression change receives a higher rank. Logistic Regression and Random Forest are candidate models. Validation Precision@50 is the selection metric, with average precision and ROC AUC as tie-breakers.</p>
+<h3>Validation design</h3>
+<p>The time-aware split trains on feature months through January 2026, selects among candidates on February–April 2026, and evaluates once on May features with June outcomes. The final model is then refit only on pre-holdout examples. A fixed random seed of 42 is used, and the training sample is capped at 250,000 rows for practical Colab runtime; validation and test cohorts are not sampled.</p>
+<p>Because this is temporal evaluation for an existing portfolio, the same content or client may appear in earlier months and later test months. It tests future-month ranking for content already being tracked, not generalization to unseen clients.</p>
+</section>
+
+<section id="results"><div class="section-label">05 · What the evidence says</div><h2>Results (vs baseline)</h2>
+<div class="callout warn"><strong>Primary result pending a clean full-warehouse run</strong><p>Open the <a href="https://colab.research.google.com/github/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/capstone.ipynb">capstone notebook in Google Colab</a>, add the gated read token as a secret called HF_TOKEN, and run all cells. The notebook writes the final holdout metrics to work/outputs/capstone_metrics.json and creates the aggregate charts used by this section. Do not replace this notice with numbers until those receipts exist.</p></div>
+<h3>Exploratory starter-snapshot benchmark — audit context only</h3>
+<p>The repository's existing report contains an earlier experiment on the bundled 30,000-row starter CSV, not the full-warehouse time-aware capstone. Its label prevalence was 54.2%. The comparison below is transcribed from that report so its status is transparent, not as the final result of the new design.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Approach</th><th>ROC AUC</th><th>Average precision</th><th>Precision@50</th><th>Recall</th><th>F1</th></tr></thead>
+<tbody>
+<tr><td>Rule baseline</td><td>0.627</td><td>0.468</td><td>0.240</td><td>—</td><td>—</td></tr>
+<tr><td>Decision tree</td><td>0.742</td><td>0.575</td><td>0.540</td><td>0.716</td><td>0.634</td></tr>
+<tr><td>Logistic Regression</td><td>0.700</td><td>0.522</td><td>0.400</td><td>0.567</td><td>0.566</td></tr>
+<tr><td><strong>Random Forest</strong></td><td><strong>0.750</strong></td><td><strong>0.618</strong></td><td><strong>0.740</strong></td><td>0.744</td><td>0.640</td></tr>
+</tbody></table></div>
+<p><strong>Why these are not the headline result:</strong> the starter pipeline uses trailing-window aggregates that overlap with the trend window that defines its label. The metrics are therefore retained as an exploratory reference, not a claim of future-month predictive skill. The full-warehouse capstone instead aligns each feature month strictly before its following-month outcome.</p>
+<div class="stat-grid">
+<div class="stat"><div class="value">54.2%</div><div class="label">Starter-snapshot decline-label base rate</div></div>
+<div class="stat"><div class="value">0.740</div><div class="label">Starter-snapshot Random Forest Precision@50 · provisional</div></div>
+<div class="stat"><div class="value">0.240</div><div class="label">Starter-snapshot rule baseline Precision@50 · provisional</div></div>
+</div>
+<figure><img src="paper-assets/starter_feature_importance.svg" alt="Feature importance chart from the exploratory starter snapshot"><figcaption>Exploratory starter-snapshot feature importance. This is not the feature-importance result for the final time-aware warehouse model; importance describes model use, not causality.</figcaption></figure>
+<div class="grid">
+<figure><img src="paper-assets/starter_action_mix.svg" alt="Suggested action mix from the starter snapshot"><figcaption>Suggested action distribution from the earlier starter-snapshot queue.</figcaption></figure>
+<figure><img src="paper-assets/starter_reason_codes.svg" alt="Most frequent reason codes from the starter snapshot"><figcaption>Reason codes from the earlier rule-plus-model queue; use as workflow context only.</figcaption></figure>
+</div>
+<p>Once the full-warehouse run completes, the final paper should present Precision@20/50/100 for baseline and selected model on the same May→June holdout, the June decline base rate, ROC AUC, average precision, aggregate error counts, and the three charts generated by the capstone notebook.</p>
+</section>
+
+<section id="limitations"><div class="section-label">06 · What this cannot claim</div><h2>Limitations & honest framing</h2>
+<ul>
+<li><strong>Proxy label:</strong> a 20% monthly impression drop is a defined operational target, not a human-confirmed refresh need.</li>
+<li><strong>No causal effect:</strong> there is no randomized or matched intervention design, so the study cannot say that refreshing a page improves search traffic.</li>
+<li><strong>One final outcome month:</strong> a June 2026 holdout provides a temporal check but not robustness across all seasonal cycles.</li>
+<li><strong>Coverage selection:</strong> three-month GSC availability and an impression floor exclude some newer, removed, and low-volume pages.</li>
+<li><strong>Unobserved context:</strong> seasonal demand, migrations, SERP changes, indexing problems, and tracking changes may resemble content deterioration.</li>
+<li><strong>Scope of generalization:</strong> the test simulates the next month for an existing tracked portfolio, not unseen clients.</li>
+<li><strong>Model interpretation:</strong> feature importance is predictive association and does not identify the effect of changing that feature.</li>
+</ul>
+<p>Claims should use terms such as <em>observed</em>, <em>measured</em>, <em>associated</em>, <em>directional</em>, and <em>decision-support</em>. The study does not prove or predict Google's ranking algorithm.</p>
+</section>
+
+<section id="recommendations"><div class="section-label">07 · What to do with the score</div><h2>Ranked recommendations</h2>
+<ol>
+<li><strong>Inspect high-visibility pages with worsening momentum.</strong> Confirm the decline persists after checking seasonality, tracking gaps, and shifts in demand.</li>
+<li><strong>Review click-through rate in context.</strong> Compare only adequate-volume pages with similar intent and position; do not infer a snippet problem from a small sample.</li>
+<li><strong>Investigate position deterioration.</strong> Check indexing, SERP changes, intent mismatch, internal linking, and competitor changes before rewriting.</li>
+<li><strong>Verify content freshness and task completion.</strong> Update facts, examples, references, screenshots, or internal links only when there is an actual user need.</li>
+<li><strong>Monitor ambiguous items.</strong> If the data is sparse or signals disagree, wait for more evidence rather than forcing an edit.</li>
+</ol>
+<div class="callout"><strong>Editorial guardrail</strong><p>A human editor verifies user intent, factual accuracy, seasonality, brand voice, indexing, and internal links before changes are published. Never delete, redirect, or bulk-publish content solely because a model ranked it highly.</p></div>
+</section>
+
+<section id="reproducibility"><div class="section-label">08 · Re-run the study</div><h2>Reproducibility</h2>
+<p>The notebook, feature timing, target, validation split, model selection, and aggregate artifact generation are committed in the repository.</p>
+<p><a href="https://colab.research.google.com/github/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/capstone.ipynb">Open the capstone in Google Colab</a> · <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship">View the full GitHub repository</a></p>
+<h3>Steps</h3>
+<ol>
+<li>Request/confirm gated access to the FlyRank warehouse and add a read-only token to Colab Secrets as HF_TOKEN.</li>
+<li>Run all notebook cells from a fresh runtime. The notebook aggregates monthly facts in DuckDB and does not export row-level queues.</li>
+<li>Check work/outputs/capstone_metrics.json against the displayed table and the generated SVG figures under docs/paper-assets.</li>
+<li>Commit the metrics receipt and aggregate charts only. Do not commit datasets, pseudonymous IDs, raw queries, credentials, domains, or URLs.</li>
+<li>Update this page with those exact metrics, enable GitHub Pages from main /docs, and record the verified live URL in submission/paper_url.txt as a single line.</li>
+</ol>
+<p>Seed: 42. Dependencies are documented in <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/requirements.txt">requirements.txt</a>; the notebook installs DuckDB, pandas, NumPy, scikit-learn, and Matplotlib when run in Colab.</p>
+</section>
+
+<section id="credit"><div class="section-label">09 · Attribution</div><h2>Acknowledgments & data credit</h2>
+<p>Built on the <a href="https://flyrank.ai">FlyRank ML Internship dataset</a>.</p>
+<p class="topmeta">This capstone is an independent analysis for learning and decision support. Results should be interpreted within the stated data, validation, and limitations.</p>
+</section>
+</article></main></div>
+<footer><div class="shell"><span>Refresh / Content Opportunity Scoring · Research draft</span><span>Reproducible analysis · Human-reviewed recommendations</span></div></footer>
+</body></html>
