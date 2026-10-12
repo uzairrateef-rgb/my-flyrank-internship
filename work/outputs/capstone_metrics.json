@@ -1,0 +1,112 @@
+{
+  "study": "Refresh / Content Opportunity Scoring",
+  "data_release": "FlyRank/internship-warehouse",
+  "source_table": "fact_content_daily_performance",
+  "grain": "client-content-month aggregate",
+  "windows": {
+    "train_feature_months": ["2025-06-01", "2026-01-01"],
+    "validation_feature_months": ["2026-02-01", "2026-04-01"],
+    "final_test_feature_month": "2026-05",
+    "final_test_outcome_month": "2026-06"
+  },
+  "label": "next-month impressions <= 80% of current-month impressions",
+  "eligibility": "GSC IS TRUE for previous/current/outcome month; at least 100 current-month impressions",
+  "features": [
+    "impressions_prev_month",
+    "clicks_prev_month",
+    "position_prev_month",
+    "active_days_prev_month",
+    "impressions_current_month",
+    "clicks_current_month",
+    "position_current_month",
+    "active_days_current_month",
+    "ctr_prev_month",
+    "ctr_current_month",
+    "impressions_change_pct",
+    "position_change"
+  ],
+  "excluded_from_features": [
+    "client_hash_id",
+    "content_hash_id",
+    "decline_20pct_next_month",
+    "feature_month",
+    "impressions_next_month",
+    "trend_direction",
+    "trend_pct"
+  ],
+  "random_seed": 42,
+  "training_sample_cap": 250000,
+  "train_rows_available": 217954,
+  "train_rows_sampled_for_validation_fit": 217954,
+  "validation_rows": 244881,
+  "test_rows": 101740,
+  "selected_model_on_validation": "random_forest",
+  "validation_metrics": {
+    "logistic_regression": {
+      "n": 244881,
+      "decline_base_rate": 0.463751781477534,
+      "precision_at_20": 0.45,
+      "precision_at_50": 0.4,
+      "precision_at_100": 0.4,
+      "roc_auc": 0.49561105310478804,
+      "average_precision": 0.4649597229537461
+    },
+    "random_forest": {
+      "n": 244881,
+      "decline_base_rate": 0.463751781477534,
+      "precision_at_20": 0.6,
+      "precision_at_50": 0.44,
+      "precision_at_100": 0.42,
+      "roc_auc": 0.5157047997777906,
+      "average_precision": 0.47819496658165533
+    }
+  },
+  "final_test": {
+    "base_rate": 0.6864655002948693,
+    "model": {
+      "n": 101740,
+      "decline_base_rate": 0.6864655002948693,
+      "precision_at_20": 0.85,
+      "precision_at_50": 0.72,
+      "precision_at_100": 0.75,
+      "roc_auc": 0.5411333978975004,
+      "average_precision": 0.7130272662844102
+    },
+    "baseline": {
+      "n": 101740,
+      "decline_base_rate": 0.6864655002948693,
+      "precision_at_20": 0.7,
+      "precision_at_50": 0.86,
+      "precision_at_100": 0.88,
+      "roc_auc": 0.5050116476024562,
+      "average_precision": 0.7097394299792762
+    },
+    "precision_at_50_lift_over_base_rate": 1.0488509614696238,
+    "precision_at_50_lift_over_baseline": 0.8372093023255813,
+    "error_counts_at_probability_0_50": {
+      "true_positives": 34449,
+      "false_positives": 14467,
+      "false_negatives": 35392,
+      "true_negatives": 17432
+    }
+  },
+  "feature_importance_method": "Random Forest impurity importance (not causal)",
+  "feature_importance": [
+    {"feature": "active_days_prev_month", "importance": 0.18809089196174988},
+    {"feature": "ctr_current_month", "importance": 0.16169615872582635},
+    {"feature": "impressions_change_pct", "importance": 0.14615149578077294},
+    {"feature": "active_days_current_month", "importance": 0.1395442631012037},
+    {"feature": "position_change", "importance": 0.08926583404208682},
+    {"feature": "impressions_prev_month", "importance": 0.06111590271158618},
+    {"feature": "position_current_month", "importance": 0.05230978071402577},
+    {"feature": "impressions_current_month", "importance": 0.04540685133020976},
+    {"feature": "ctr_prev_month", "importance": 0.038471504465019096},
+    {"feature": "clicks_current_month", "importance": 0.03512119099382273}
+  ],
+  "limitations": [
+    "one final holdout outcome month",
+    "decline is a defined proxy, not editorial ground truth",
+    "only continuously observed GSC items with at least 100 current-month impressions are eligible",
+    "no causal refresh impact is estimated"
+  ]
+}
