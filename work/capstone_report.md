@@ -1,10 +1,10 @@
 # Capstone Report — Refresh / Content Opportunity Scoring
 
-- **Author:** Uzair Rateef
+- **Author:** Mohammed Uzair Ateef
 - **Lane:** Refresh / Content Opportunity Scoring
 - **Repository:** https://github.com/uzairrateef-rgb/my-flyrank-internship
 - **Date:** 2026-10-12
-- **Status:** Full-warehouse results generated; metrics and figures committed. Final submission checks are author metadata, deployed-page verification, and the live URL receipt.
+- **Status:** Capstone results and paper prepared for final submission.
 
 ## 0. Abstract
 
