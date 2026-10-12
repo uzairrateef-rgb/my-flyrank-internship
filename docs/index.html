@@ -51,7 +51,7 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
     <div class="meta"><span>Outcome horizon</span><strong>Next calendar month</strong></div>
     <div class="meta"><span>Decision</span><strong>What to review first</strong></div>
   </div>
-  <div class="status"><strong>Draft — final warehouse evaluation still needs to be run</strong>The committed capstone notebook now defines a leakage-aware, month-aligned evaluation. Its generated metrics and charts must be reviewed and committed before this page is treated as the final submission. Earlier starter-snapshot metrics below are shown only as exploratory audit context.</div>
+  <div class="status"><strong>Full-warehouse results generated · publication sync remains</strong>The time-aware evaluation has completed. The final metrics are shown below; commit the generated JSON and three SVG files from the result ZIP to the linked repository paths, then verify the live page before submitting.</div>
 </div></div>
 
 <div class="shell layout">
@@ -102,29 +102,30 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
 </section>
 
 <section id="results"><div class="section-label">05 · What the evidence says</div><h2>Results (vs baseline)</h2>
-<div class="callout warn"><strong>Primary result pending a clean full-warehouse run</strong><p>Open the <a href="https://colab.research.google.com/github/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/capstone.ipynb">capstone notebook in Google Colab</a>, add the gated read token as a secret called HF_TOKEN, and run all cells. The notebook writes the final holdout metrics to work/outputs/capstone_metrics.json and creates the aggregate charts used by this section. Do not replace this notice with numbers until those receipts exist.</p></div>
-<h3>Exploratory starter-snapshot benchmark — audit context only</h3>
-<p>The repository's existing report contains an earlier experiment on the bundled 30,000-row starter CSV, not the full-warehouse time-aware capstone. Its label prevalence was 54.2%. The comparison below is transcribed from that report so its status is transparent, not as the final result of the new design.</p>
-<div class="table-wrap"><table>
-<thead><tr><th>Approach</th><th>ROC AUC</th><th>Average precision</th><th>Precision@50</th><th>Recall</th><th>F1</th></tr></thead>
-<tbody>
-<tr><td>Rule baseline</td><td>0.627</td><td>0.468</td><td>0.240</td><td>—</td><td>—</td></tr>
-<tr><td>Decision tree</td><td>0.742</td><td>0.575</td><td>0.540</td><td>0.716</td><td>0.634</td></tr>
-<tr><td>Logistic Regression</td><td>0.700</td><td>0.522</td><td>0.400</td><td>0.567</td><td>0.566</td></tr>
-<tr><td><strong>Random Forest</strong></td><td><strong>0.750</strong></td><td><strong>0.618</strong></td><td><strong>0.740</strong></td><td>0.744</td><td>0.640</td></tr>
-</tbody></table></div>
-<p><strong>Why these are not the headline result:</strong> the starter pipeline uses trailing-window aggregates that overlap with the trend window that defines its label. The metrics are therefore retained as an exploratory reference, not a claim of future-month predictive skill. The full-warehouse capstone instead aligns each feature month strictly before its following-month outcome.</p>
+<p class="lead">The time-aware final holdout ranks May 2026 content-month signals against June 2026 impression declines. Random Forest helps at the very top of the queue, while the transparent rule baseline performs better across the larger top-50 and top-100 review sets.</p>
 <div class="stat-grid">
-<div class="stat"><div class="value">54.2%</div><div class="label">Starter-snapshot decline-label base rate</div></div>
-<div class="stat"><div class="value">0.740</div><div class="label">Starter-snapshot Random Forest Precision@50 · provisional</div></div>
-<div class="stat"><div class="value">0.240</div><div class="label">Starter-snapshot rule baseline Precision@50 · provisional</div></div>
+<div class="stat"><div class="value">85%</div><div class="label">Random Forest Precision@20 (baseline: 70%)</div></div>
+<div class="stat"><div class="value">68.6%</div><div class="label">Final June decline base rate</div></div>
+<div class="stat"><div class="value">101,740</div><div class="label">Eligible final-holdout examples</div></div>
 </div>
-<figure><img src="paper-assets/starter_feature_importance.svg" alt="Feature importance chart from the exploratory starter snapshot"><figcaption>Exploratory starter-snapshot feature importance. This is not the feature-importance result for the final time-aware warehouse model; importance describes model use, not causality.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th>Final holdout metric</th><th>Random Forest</th><th>Transparent baseline</th></tr></thead>
+<tbody>
+<tr><td>Precision@20</td><td><strong>0.850</strong></td><td>0.700</td></tr>
+<tr><td>Precision@50</td><td>0.720</td><td><strong>0.860</strong></td></tr>
+<tr><td>Precision@100</td><td>0.750</td><td><strong>0.880</strong></td></tr>
+<tr><td>ROC AUC</td><td>0.541</td><td>0.505</td></tr>
+<tr><td>Average precision</td><td>0.713</td><td>0.710</td></tr>
+</tbody></table></div>
+<div class="callout warn"><strong>Interpretation: mixed performance, with a substantial prevalence shift</strong><p>At K=20, the model found 17 declines and the baseline found 14. At K=50, the baseline found 43 versus 36 for the model; at K=100, it found 88 versus 75. Validation decline prevalence was 46.4%, compared with 68.6% in the final holdout. That shift and the near-chance ROC AUC mean the experiment does not support an overall model win. The baseline is the stronger current default for larger review queues; treat the model's top-20 result as provisional until repeated across more future months.</p></div>
+<h3>Final holdout figures</h3>
+<figure><img src="paper-assets/model_vs_baseline.svg" alt="Precision at K for Random Forest and the transparent baseline on the final time-aware holdout"><figcaption>Generated from the full-warehouse May→June 2026 holdout. The corresponding SVG must be committed at <code>docs/paper-assets/model_vs_baseline.svg</code>.</figcaption></figure>
 <div class="grid">
-<figure><img src="paper-assets/starter_action_mix.svg" alt="Suggested action mix from the starter snapshot"><figcaption>Suggested action distribution from the earlier starter-snapshot queue.</figcaption></figure>
-<figure><img src="paper-assets/starter_reason_codes.svg" alt="Most frequent reason codes from the starter snapshot"><figcaption>Reason codes from the earlier rule-plus-model queue; use as workflow context only.</figcaption></figure>
+<figure><img src="paper-assets/decline_rate_by_month.svg" alt="Observed next-month decline rate by feature month"><figcaption>Decline prevalence across feature months. Month-to-month variation affects the interpretation of the final test.</figcaption></figure>
+<figure><img src="paper-assets/feature_importance.svg" alt="Random Forest feature importance for the final fitted model"><figcaption>Random Forest impurity importance indicates how the fitted model used its inputs, not causal effects.</figcaption></figure>
 </div>
-<p>Once the full-warehouse run completes, the final paper should present Precision@20/50/100 for baseline and selected model on the same May→June holdout, the June decline base rate, ROC AUC, average precision, aggregate error counts, and the three charts generated by the capstone notebook.</p>
+<p>The primary target is an observed next-month impression drop of at least 20%, among content with valid Google Search Console coverage in the previous, current, and outcome months and at least 100 current-month impressions. These are ranking metrics for human review prioritization, not evidence that a refresh will cause traffic gains.</p>
+<p>The earlier starter-snapshot Random Forest Precision@50 of 0.740 and rule-baseline Precision@50 of 0.240 are retained only in the repository's audit report; those figures used overlapping windows and are not the headline result here.</p>
 </section>
 
 <section id="limitations"><div class="section-label">06 · What this cannot claim</div><h2>Limitations & honest framing</h2>
@@ -170,5 +171,5 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
 <p class="topmeta">This capstone is an independent analysis for learning and decision support. Results should be interpreted within the stated data, validation, and limitations.</p>
 </section>
 </article></main></div>
-<footer><div class="shell"><span>Refresh / Content Opportunity Scoring · Research draft</span><span>Reproducible analysis · Human-reviewed recommendations</span></div></footer>
+<footer><div class="shell"><span>Refresh / Content Opportunity Scoring · Capstone research</span><span>Reproducible analysis · Human-reviewed recommendations</span></div></footer>
 </body></html>
