@@ -132,7 +132,7 @@ The deployed page currently embeds charts from the earlier starter snapshot for 
 - **Validation audit:** https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/w06_validation_audit.ipynb
 - **Action playbook:** https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/w07_action_playbook.ipynb
 
-Run from a fresh Google Colab runtime with a read-only Hugging Face token stored in Colab Secrets as `HF_TOKEN`, then use Runtime → Run all. DuckDB scans the monthly Parquet partitions and aggregates them without writing raw daily rows to the repo. The notebook writes an aggregate metrics receipt and SVG charts; compare them against the displayed table before publication. Seed: 42.
+Run from a fresh Google Colab runtime with a read-only Hugging Face token stored in Colab Secrets as `HF_TOKEN`, then use Runtime → Run all. A lightweight March 2026 metadata probe checks the source, after which DuckDB aggregates the monthly Parquet partitions. The aggregate is cached locally at `data/processed/capstone_monthly_gsc_v1.parquet`, a path excluded by `.gitignore`; it contains pseudonymous keys and must never be committed. Subsequent runs in the same workspace reuse that cache rather than rescanning the remote warehouse. The notebook writes an aggregate metrics receipt and SVG charts; compare them against the displayed table before publication. Seed: 42.
 
 The results are considered reproducible only when the metrics JSON and generated figures from the exact run are committed alongside the notebook.
 
