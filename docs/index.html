@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A reproducible study of time-aware content refresh opportunity scoring on anonymized search performance data.">
+<meta name="author" content="Uzair Rateef">
+<meta property="og:title" content="How can we rank content refresh opportunities before traffic declines?">
+<meta property="og:type" content="article">
 <title>How Can We Rank Content Refresh Opportunities Before Traffic Declines?</title>
 <style>
 :root{--ink:#18212b;--muted:#596776;--paper:#fbfaf7;--card:#fff;--line:#e4e2dc;--accent:#175e59;--accent2:#dbece7;--warm:#fff2da;--warmline:#e9c986;--measure:#eff2f6;--max:1120px}
@@ -14,7 +17,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .hero{padding:68px 0 42px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 80% 5%,#dfece6 0,transparent 36%),var(--paper)}
 .kicker{font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-size:.76rem}
 h1{font-size:clamp(2.4rem,5vw,4.8rem);letter-spacing:-.055em;line-height:1.03;max-width:900px;margin:18px 0 22px;font-weight:750}
-.dek{font-size:1.2rem;color:#394956;max-width:760px;margin:0 0 28px}
+.dek{font-size:1.2rem;color:#394956;max-width:760px;margin:0 0 14px}.byline{font-size:.9rem;color:var(--muted);margin:0 0 28px}.byline strong{color:var(--ink)}
 .meta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:32px}
 .meta{background:#ffffffbd;border:1px solid var(--line);padding:14px 16px;border-radius:14px}.meta span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:750}.meta strong{display:block;font-size:.96rem;margin-top:4px}
 .status{background:var(--warm);border:1px solid var(--warmline);border-radius:14px;padding:16px 18px;margin-top:25px;color:#594315}.status strong{display:block;margin-bottom:2px}
@@ -45,13 +48,14 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
   <div class="kicker">Refresh / Content Opportunity Scoring</div>
   <h1>How can we rank content refresh opportunities before traffic declines?</h1>
   <p class="dek">A time-aware ranking experiment that weighs search visibility and recent momentum, compares learned models with a transparent baseline, and turns the result into an editorial review playbook.</p>
+  <p class="byline">By <strong>Uzair Rateef</strong> · FlyRank ML Internship Capstone · 12 October 2026 · <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship">View source repository</a></p>
   <div class="meta-grid">
     <div class="meta"><span>Study type</span><strong>Applied ML · Ranking</strong></div>
     <div class="meta"><span>Data</span><strong>FlyRank warehouse</strong></div>
     <div class="meta"><span>Outcome horizon</span><strong>Next calendar month</strong></div>
     <div class="meta"><span>Decision</span><strong>What to review first</strong></div>
   </div>
-  <div class="status"><strong>Full-warehouse results generated · publication sync remains</strong>The time-aware evaluation has completed. The final metrics are shown below; commit the generated JSON and three SVG files from the result ZIP to the linked repository paths, then verify the live page before submitting.</div>
+  <div class="status"><strong>Full-warehouse results and figures committed</strong>This paper reports the final time-aware holdout, including the mixed model-versus-baseline result and the substantial validation-to-test prevalence shift. The metrics receipt and all three aggregate figures are available in the public repository; see the reproducibility section for the code and rerun steps.</div>
 </div></div>
 
 <div class="shell layout">
@@ -62,7 +66,7 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
 <main><article>
 <section id="abstract"><div class="section-label">01 · Summary</div><h2>Title + Abstract</h2>
 <div class="abstract">
-<p>This study asks whether monthly search-performance signals can help rank content items likely to see a meaningful decline in the following month. It aggregates the gated FlyRank internship warehouse at client-content-month grain and defines the target as next-month impressions at least 20% below the feature month, with a minimum of 100 impressions and valid Google Search Console coverage. It compares a transparent visibility-plus-momentum baseline with Logistic Regression and Random Forest, using February–April 2026 for model selection and May features → June outcome as the final holdout. An earlier 30,000-row starter-snapshot run reported Precision@50 of 0.740 for Random Forest versus 0.240 for the rule baseline, but those figures are not treated as the primary capstone result because the old feature windows overlap the trend-label window. The intended output is a ranked editorial review queue for human decision support, not a prediction of Google's algorithm or a causal claim that refreshing content improves traffic.</p>
+<p>This study asks whether monthly Google Search Console signals can rank content items likely to experience a meaningful next-month impression decline better than a transparent visibility-plus-momentum rule. Using the gated FlyRank ML Internship warehouse, we aggregate daily records into client-content-month observations and label a decline when next-month impressions are at least 20% below the feature month, subject to valid coverage and at least 100 current-month impressions. We compare Logistic Regression and Random Forest with a rule baseline, selecting by February–April 2026 validation Precision@50 and testing May features against June 2026 outcomes. On 101,740 final-holdout examples, Random Forest reached Precision@20 of 0.850 versus 0.700 for the baseline, but the baseline performed better at Precision@50 (0.860 versus 0.720) and Precision@100 (0.880 versus 0.750); ROC AUC was 0.541 versus 0.505 and average precision was 0.713 versus 0.710. These mixed findings support at most a provisional top-20 triage use, not an overall model win, a causal claim that refreshing content raises traffic, or a guarantee of performance in other months or portfolios.</p>
 </div>
 <div class="stat-grid">
 <div class="stat"><div class="value">20%</div><div class="label">Defined next-month impression decline threshold</div></div>
@@ -153,17 +157,16 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
 </section>
 
 <section id="reproducibility"><div class="section-label">08 · Re-run the study</div><h2>Reproducibility</h2>
-<p>The notebook, feature timing, target, validation split, model selection, and aggregate artifact generation are committed in the repository.</p>
+<p>The full-warehouse notebook, time-aware split, holdout metrics receipt, and three aggregate SVG charts are committed to the public repository. The output files are <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/work/outputs/capstone_metrics.json">capstone_metrics.json</a>, <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/docs/paper-assets/model_vs_baseline.svg">model-versus-baseline chart</a>, <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/docs/paper-assets/decline_rate_by_month.svg">monthly decline-rate chart</a>, and <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/docs/paper-assets/feature_importance.svg">feature-importance chart</a>.</p>
 <p><a href="https://colab.research.google.com/github/uzairrateef-rgb/my-flyrank-internship/blob/main/work/notebooks/capstone.ipynb">Open the capstone in Google Colab</a> · <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship">View the full GitHub repository</a></p>
-<h3>Steps</h3>
+<h3>Re-run steps</h3>
 <ol>
-<li>Request/confirm gated access to the FlyRank warehouse and add a read-only token to Colab Secrets as HF_TOKEN.</li>
-<li>Run all notebook cells from a fresh runtime. After a lightweight metadata probe, the notebook aggregates monthly facts in DuckDB and caches them locally under data/processed/ (ignored by Git); later runs reuse that cache. It does not export row-level queues.</li>
-<li>Download the notebook-generated public artifact bundle from Colab, extract it, and commit only work/outputs/capstone_metrics.json plus the three SVGs under docs/paper-assets (not the ZIP or local cache). Check the JSON against the displayed table.</li>
-<li>Commit the metrics receipt and aggregate charts only. Do not commit datasets, pseudonymous IDs, raw queries, credentials, domains, or URLs.</li>
-<li>Update this page with those exact metrics, enable GitHub Pages from main /docs, and record the verified live URL in submission/paper_url.txt as a single line.</li>
+<li>Confirm gated access to the FlyRank warehouse and add a read-only Hugging Face token to Colab Secrets using the name HF_TOKEN. Never commit the token or paste it into the notebook itself.</li>
+<li>Run all cells from a fresh Colab runtime. After a metadata probe, DuckDB aggregates monthly facts and stores a local cache under data/processed/; the cache is ignored by Git and can be lost when the runtime resets.</li>
+<li>Download the generated public artifact ZIP from Colab, compare the JSON metrics with the notebook's final output, and commit only the metrics JSON and aggregate SVG charts. Do not commit the ZIP, cache, raw dataset, row-level queues, or pseudonymous IDs.</li>
+<li>Use the fixed random seed 42. The final holdout uses May 2026 feature data to score the June 2026 outcome; the model is selected on February–April 2026 validation data.</li>
 </ol>
-<p>Seed: 42. Dependencies are documented in <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/requirements.txt">requirements.txt</a>; the notebook installs DuckDB, pandas, NumPy, scikit-learn, and Matplotlib when run in Colab.</p>
+<p>Dependencies are documented in <a href="https://github.com/uzairrateef-rgb/my-flyrank-internship/blob/main/requirements.txt">requirements.txt</a>; the notebook installs DuckDB, pandas, NumPy, scikit-learn, and Matplotlib in Colab.</p>
 </section>
 
 <section id="credit"><div class="section-label">09 · Attribution</div><h2>Acknowledgments & data credit</h2>
