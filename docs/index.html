@@ -158,7 +158,7 @@ footer{background:#f1f0eb;border-top:1px solid var(--line);padding:28px 0;color:
 <ol>
 <li>Request/confirm gated access to the FlyRank warehouse and add a read-only token to Colab Secrets as HF_TOKEN.</li>
 <li>Run all notebook cells from a fresh runtime. After a lightweight metadata probe, the notebook aggregates monthly facts in DuckDB and caches them locally under data/processed/ (ignored by Git); later runs reuse that cache. It does not export row-level queues.</li>
-<li>Check work/outputs/capstone_metrics.json against the displayed table and the generated SVG figures under docs/paper-assets.</li>
+<li>Download the notebook-generated public artifact bundle from Colab, extract it, and commit only work/outputs/capstone_metrics.json plus the three SVGs under docs/paper-assets (not the ZIP or local cache). Check the JSON against the displayed table.</li>
 <li>Commit the metrics receipt and aggregate charts only. Do not commit datasets, pseudonymous IDs, raw queries, credentials, domains, or URLs.</li>
 <li>Update this page with those exact metrics, enable GitHub Pages from main /docs, and record the verified live URL in submission/paper_url.txt as a single line.</li>
 </ol>
